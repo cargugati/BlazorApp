@@ -1,13 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace BlazorApp.Shared.Models
 {
-	public class Pessoa
-	{
-		public int Id { get; set; }
-		public string Nome { get; set; }
-		public int Peso { get; set; }
-	}
+   public class Pessoa
+   {
+      [Key]
+      public int Id { get; set; }
+      [Required]
+      public string Nome { get; set; }
+      [Required]
+      public int Peso { get; set; }
+   }
 }

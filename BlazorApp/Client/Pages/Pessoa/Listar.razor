@@ -1,0 +1,85 @@
+@page "/pessoa/listar"
+@page "/pessoa"
+
+@inject HttpClient http
+
+<h3>Lista de Pessoas</h3>
+
+<div>
+   <a href="pessoa/criar" class="btn btn-success">Criar</a>
+</div>
+
+<div>
+   @if (pessoas == null)
+   {
+      <text>Carregando . . . </text>
+   }
+   else if (pessoas.Count == 0)
+   {
+      <text>Não há nunhuma Pessoa cadastrada ainda no banco de dados. </text>
+   }
+   else
+   {
+      <table class="table">
+         <thead>
+            <tr>
+               <th>Id</th>
+               <th>Nome</th>
+               <th>Peso</th>
+               <th></th>
+            </tr>
+         </thead>
+         <tbody>
+            @foreach (var pessoa in pessoas)
+            {
+               <tr>
+                  <td>@pessoa.Id</td>
+                  <td>@pessoa.Nome</td>
+                  <td>@pessoa.Peso</td>
+                  <td>
+                     <a class="btn btn-success" href="pessoa/editar/@pessoa.Id">Editar</a>
+                     <button class="btn btn-danger" @onclick="@(() => ExcluirPessoa(pessoa.Id))" >Excluir</button>
+                  </td>
+               </tr>
+            }
+         </tbody>
+
+      </table>
+   }
+</div>
+@code {
+
+   List<Pessoa> pessoas;
+
+   protected override async Task OnInitializedAsync()
+   {
+      await LoadPessoas();
+      //return base.OnInitializedAsync();
+   }
+
+
+   async Task LoadPessoas()
+   {
+      pessoas = await http.GetFromJsonAsync<List<Pessoa>>("api/pessoa");
+
+      /*
+         //await Task.Delay(500);
+         //pessoas = new List<Pessoa>
+         {
+         //         new Pessoa { Id = 1, Nome = "Gustavo", Peso = 88 },
+         //         new Pessoa { Id = 2, Nome = "Bruno", Peso = 94 },
+         //         new Pessoa { Id = 3, Nome = "Andre", Peso = 78 }
+         //   };
+
+         //pessoas = new List<Pessoa> ();
+
+         }
+      */
+   }
+
+   async Task ExcluirPessoa(int id)
+   {
+      await http.DeleteAsync($"api/pessoa/{id}");
+      await LoadPessoas();
+   }
+}

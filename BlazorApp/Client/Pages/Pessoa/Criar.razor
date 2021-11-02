@@ -1,0 +1,18 @@
+@page "/pessoa/criar"
+
+@inject HttpClient http
+@inject NavigationManager navigation
+
+<h3>Cadastrar Pessoa</h3>
+
+<FormPessoa Pessoa="@pessoa" ButtonText="Adicionar" OnValidSubmit="@CriarPessoa" />
+
+@code {
+   Pessoa pessoa = new Pessoa();
+
+   async Task CriarPessoa()
+   {
+      await http.PostAsJsonAsync("api/pessoa", pessoa);
+      navigation.NavigateTo("pessoa/listar");
+   }
+}

@@ -1,7 +1,9 @@
+using BlazorApp.Server.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,7 +24,9 @@ namespace BlazorApp.Server
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services)
 		{
-
+			services.AddDbContext<ApplicationDbContext>(
+				options => options.UseSqlServer(
+					Configuration.GetConnectionString("DefaultConnection")));
 			services.AddControllersWithViews();
 			services.AddRazorPages();
 		}
@@ -33,8 +37,8 @@ namespace BlazorApp.Server
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-				app.UseWebAssemblyDebugging();
-			}
+            app.UseWebAssemblyDebugging();
+         }
 			else
 			{
 				app.UseExceptionHandler("/Error");
@@ -43,9 +47,9 @@ namespace BlazorApp.Server
 			}
 
 			app.UseHttpsRedirection();
-			app.UseBlazorFrameworkFiles();
+			app.UseBlazorFrameworkFiles();         
 			app.UseStaticFiles();
-
+         
 			app.UseRouting();
 
 			app.UseEndpoints(endpoints =>
